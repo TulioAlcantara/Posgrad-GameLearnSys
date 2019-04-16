@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "1093204404599",
+    "firebase_url": "https://posgrad.firebaseio.com",
+    "project_id": "posgrad",
+    "storage_bucket": "posgrad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093204404599:android:d11caaefdfbc7985",
+        "android_client_info": {
+          "package_name": "com.example.gamelearnsys"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093204404599-pf9rrvcul2kvbpu8nbrf9uq41s6m90op.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gamelearnsys",
+            "certificate_hash": "170a1f5f38e101ab4d320144ca727a32c650ff33"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGoZzc5p7U3tycELcMc6L7mS4VWh4dH6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093204404599-telg6ol44th86po6kmhmce6gjrlnp51c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1093204404599-vk7rvnqc3tv547mdqv51edm34umh46j2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ufg.inf.apoema.PosgradApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1093204404599:android:11ed947109d74c63",
+        "android_client_info": {
+          "package_name": "com.example.posgrad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1093204404599-j7cj9fmdr9moej5ofu6unhit518vu7ql.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.posgrad",
+            "certificate_hash": "170a1f5f38e101ab4d320144ca727a32c650ff33"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGoZzc5p7U3tycELcMc6L7mS4VWh4dH6I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1093204404599-telg6ol44th86po6kmhmce6gjrlnp51c.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1093204404599-vk7rvnqc3tv547mdqv51edm34umh46j2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "ufg.inf.apoema.PosgradApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
