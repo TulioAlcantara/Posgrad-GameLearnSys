@@ -5,7 +5,7 @@ import com.google.firebase.firestore.DocumentReference
 data class Missao(
     val descricao : String = "",
     val nome : String = "",
-    val order : Int = 0,
-    var id : String = "",
+    val order : Long = 0,
+    var temp : String = "",
     val temporada : DocumentReference? = null
 )

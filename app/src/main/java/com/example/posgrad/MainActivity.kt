@@ -25,7 +25,7 @@ val time_collection = ArrayList<Time>()
 //Lista da relação Time - Pontuação(Hash missão - pontuação)
 val pontuacao_collection = ArrayList<TimePontuacao>()
 
-//Hash que relaciona o nome da missão com a sua pontuação(soma da pontuação das atividades)
+//Hash que relaciona o nome da missão com a sua pontuação - Usamos para inicializar os elementos de pontuacao_collection
 val missaoPontuacaoHashMap = mutableMapOf<String?, Int?>()
 
 
@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
         replaceFragment(SelfServiceFragment())
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
     }

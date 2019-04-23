@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.UiThread
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.posgrad.*
@@ -20,39 +21,39 @@ import com.github.mikephil.charting.data.BarEntry
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
+import kotlinx.android.synthetic.main.fragment_dashboard.view.*
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 class DashBoardFragment : Fragment() {
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        //Consulta ao FireBase
+    override fun onCreate(savedInstanceState: Bundle?) {
         val db = FirebaseFirestore.getInstance()
-        //fireStoreQuery(db)
-        testData(db)
-        return inflater.inflate(R.layout.fragment_dashboard, container, false)
+        doAsync {
+            fireStoreQuery(db)
+            uiThread {
+                progressBar.visibility = View.INVISIBLE
+                chartView.adapter?.notifyDataSetChanged()
+                for(element in pontuacao_collection){
+                    Log.d("pontuacao_collection", element.nome + ": " + element.pontuacao?.values)
+                }
+
+            }
+        }
+        super.onCreate(savedInstanceState)
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        chartView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        chartView.adapter = ChartAdapter(pontuacao_collection)
-        super.onActivityCreated(savedInstanceState)
-    }
-
-    override fun onPause() {
-        super.onPause()
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val rootView = inflater.inflate(R.layout.fragment_dashboard, container, false)
+        val chart_recyclerView = rootView.findViewById(R.id.chartView) as RecyclerView
+        chart_recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        chart_recyclerView.adapter = ChartAdapter(pontuacao_collection)
+        return rootView
     }
 
     override fun onResume() {
+        chartView.adapter = ChartAdapter(pontuacao_collection)
         super.onResume()
-    }
-
-    fun testData(db : FirebaseFirestore){
-        val hash_test = missaoPontuacaoHashMap
-
-        hash_test.put("missao1", 60)
-        hash_test.put("missao2", 80)
-        hash_test.put("missao3", 70)
-        val data_test : TimePontuacao = TimePontuacao("TIME TESTE", hash_test)
-        pontuacao_collection.add(data_test)
     }
 
     fun fireStoreQuery(db : FirebaseFirestore){
@@ -68,10 +69,7 @@ class DashBoardFragment : Fragment() {
                         Log.d("SuccessMissao", document.id + " => " + document.data)
                         val missao = document.toObject(Missao::class.java)
 
-                        missao.id = document.id
-                        Log.d("MissaoID", missao.id)
                         missao_collection.add(missao)
-
                         missaoPontuacaoHashMap.put(missao.nome, 0)  // Seto o o time no meu hash com pontuação 0
                     }
                 }
@@ -92,7 +90,6 @@ class DashBoardFragment : Fragment() {
                         time.id = document.id
                         time.time_ref = document.reference
                         time_collection.add(time)
-                        Log.d("timeRef", time.time_ref.toString())
                     }
                     atividadeQuery(db)
                 }
@@ -100,17 +97,16 @@ class DashBoardFragment : Fragment() {
                     Log.d("ErrorTime", "Error getting documents: ", task.exception)
                 }
             }
-
-
-
     }
 
     fun atividadeQuery(db : FirebaseFirestore){
         val atividades = db.collection("atividadesComTime")
 
-        //Pra cada time, recupero as atividades relacionadas
+        //Pra cada time, recupero as atividades relacionadas (time_ref de cada atividade)
         for(time in time_collection){
-            Log.d("homer", "time_ref : " + time.id)
+            val time_hash = HashMap(missaoPontuacaoHashMap) // Cada time recebe a copia de missaoPontuacaoHashMap
+            val time_pontuacao = TimePontuacao(time.id, time_hash)
+
             atividades
                 .whereEqualTo("time", time.time_ref)
                 .get()
@@ -118,19 +114,22 @@ class DashBoardFragment : Fragment() {
                     if (task.isSuccessful) {
                         for (document in task.result!!) {
                             Log.d("SuccessAtividade", document.id + " => " + document.data)
+
                             val atividade  = document.toObject(Atividade::class.java)
                             atividade_collection.add(atividade)
 
-                            //Recupero o nome da missão referente a atividade
+                            //Recupero a referencia a missao da atividade
                             val missao_ref = document.getDocumentReference("missao")
+
                             missao_ref?.get()?.addOnCompleteListener { task2 ->
                                 val missao_nome = task2.result!!.getString("nome")
 
-                                //Adiciono a pontuação da atividade atual a pontuação total da missão
-                                val pontuacao_atual = missaoPontuacaoHashMap.get(missao_nome)
-                                missaoPontuacaoHashMap.put(missao_nome,pontuacao_atual!!.plus(atividade.pontuacao))
-
-                                Log.d("AtividadeList","time: " + time.id  + "atividade: " + atividade.nome + " / missao: "+ missao_nome + " / pontuacao: " + atividade.pontuacao)
+                                //Verifico a temporada
+                                if(task2.result!!.getString("temp") == "1ª Temporada"){
+                                    //Atualizo a pontuação
+                                    val pontuacao_atual = time_pontuacao.pontuacao?.get(missao_nome)?.plus(atividade.pontuacao)
+                                    time_pontuacao.pontuacao?.put(missao_nome, pontuacao_atual)
+                                }
                             }
                         }
                     }
@@ -138,24 +137,24 @@ class DashBoardFragment : Fragment() {
                         Log.d("ErrorAtividade", "Error getting documents: ", task.exception)
                     }
                 }
-
-            //Adiciono o nome do time e pontuação total de cada missão a minha List(pontuacao_collection)
-            val time_pontuacao : TimePontuacao = TimePontuacao(time.id, missaoPontuacaoHashMap)
-
-            //if(time_pontuacao.nome == user.time){
-                //setMainChart(time_pontuacao)
-
-            Log.d("timePontuacao", "Time: " + time_pontuacao.nome)
-            pontuacao_collection.add(time_pontuacao)
-
-            //Reseto a pontuação do HashMap
-            for(element in missaoPontuacaoHashMap){
-                element.setValue(0)
-                Log.d("resetHash", "missao: " + element.component1() + " / pontuação: " + element.component2())
-            }
+            pontuacao_collection.add(time_pontuacao) //Adiciono a pontuação do time a minha lista
         }
     }
 
+    fun setMainChart(){
+
+    }
+    /*
+    fun testData(db : FirebaseFirestore){
+        val hash_test = missaoPontuacaoHashMap
+
+        hash_test.put("missao1", 60)
+        hash_test.put("missao2", 80)
+        hash_test.put("missao3", 70)
+        val data_test : TimePontuacao = TimePontuacao("TIME TESTE", hash_test)
+        pontuacao_collection.add(data_test)
+    }
+    */
     /*
     fun setMainChart(main_time : TimePontuacao){
         val entries = ArrayList<BarEntry>() // Array com os pontos
