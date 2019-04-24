@@ -8,6 +8,14 @@
                                    android:layout_marginRight="3dp"
                                    android:layout_height="wrap_content">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true" app:srcCompat="@android:drawable/star_big_off"
+            android:layout_gravity="right"
+            android:id="@+id/changeChartMain" app:backgroundTint="@android:color/white"
+            app:rippleColor="@android:color/black" app:fabSize="mini" android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"/>
     <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -15,12 +23,12 @@
         <TextView
                 android:layout_width="match_parent"
                 android:layout_marginBottom="5dp"
-                android:layout_height="wrap_content" android:id="@+id/timeNome" android:textSize="16sp"
-                android:textAlignment="textStart"/>
+                android:layout_height="wrap_content" android:id="@+id/timeNome" android:textSize="24sp"
+                android:textAlignment="center" android:layout_marginTop="5dp" android:textStyle="bold"/>
         <com.github.mikephil.charting.charts.BarChart
                 android:id="@+id/chart"
                 android:layout_width="match_parent"
-                android:layout_height="160dp"/>
+                android:layout_height="177dp"/>
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>
