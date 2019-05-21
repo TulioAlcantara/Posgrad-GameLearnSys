@@ -3,15 +3,4 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".fragments.SelfServiceFragment">
-
-    <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="277dp">
-        <com.github.mikephil.charting.charts.BarChart
-                android:id="@+id/chart1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
-    </androidx.cardview.widget.CardView>
-
-</FrameLayout>
+             tools:context=".fragments.SelfServiceFragment"/>
