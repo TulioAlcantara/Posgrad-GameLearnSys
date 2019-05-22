@@ -152,8 +152,8 @@ class ChartSet(){
         lineChart.setTouchEnabled(true)
         lineChart.description.isEnabled = false
         lineChart.extraBottomOffset = 5.toFloat()
-        lineChart.extraRightOffset = 22.toFloat()
-        lineChart.extraLeftOffset = 24.toFloat()
+        lineChart.extraRightOffset = 35.toFloat()
+        lineChart.extraLeftOffset = 35.toFloat()
         lineChart.setOnChartValueSelectedListener(selector)
         lineChart.animateY(500)
 
@@ -195,21 +195,22 @@ class ChartSet(){
         override fun onValueSelected(e: Entry?, h: Highlight?) {
 
             val fragmento = MissaoInfoFragment()
+
+            //Argumentos que serão recebidos no fragmento MissaoInfoFragment
             val bundle = Bundle()
-            bundle.putString("missao", missao_nome[e?.x!!.toInt()])
-            bundle.putString("time", time_pontuacao.nome)
-            //bundle.putInt("pontuacao", time_pontuacao.pontuacao.get(missao_nome[e?.x!!.toInt()]))
+            val missaoNome = missao_nome[e?.x!!.toInt()]
+            val pontuacao  = time_pontuacao.pontuacao!!["Missão " + missaoNome]
+
+            bundle.putString("missao", missaoNome) //Nome da missão
+            bundle.putString("time", time_pontuacao.nome) //Nome do time
+            bundle.putInt("pontuacao", pontuacao!!) //Pontuação da missão
 
             for(missao in missao_collection){
-                if(missao.nome == missao_nome[e.x.toInt()]){
+                if(missao.nome == "Missão " + missao_nome[e.x.toInt()]){
                     bundle.putString("descricao", missao.descricao)
                 }
             }
-
             fragmento.arguments = bundle
-
-            //Log.d("cliquei", bundle.getString("missao") + " " + bundle.getString("time"))
-
 
             //Transação para o fragmento que mostra as informações da missão
             val activity = this.context

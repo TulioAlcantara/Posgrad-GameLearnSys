@@ -2,6 +2,7 @@ package com.example.posgrad
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import androidx.annotation.UiThread
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -47,16 +48,22 @@ class MainActivity : AppCompatActivity(){
         setContentView(R.layout.activity_main)
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        replaceFragment(SelfServiceFragment())
-
         //Set user avatar
         Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(userAvatar)
 
+        /*
+         //FireStore Query
+        query.timeQuery()
+        query.membroQuery()
+        query.missaoQuery()
+        query.atividadeQuery()
+        */
 
-        //FireStore Query
-        val query = FireStoreQuery()
-        query.MainQuery()
+        val db = FirebaseFirestore.getInstance()
+        val query = FireStoreQuery(db)
+        query.testeQuery()
 
+        replaceFragment(SelfServiceFragment())
     }
 
     //Controlador da bottom navigation view
@@ -64,13 +71,27 @@ class MainActivity : AppCompatActivity(){
         when (item.itemId) {
             R.id.navigation_dashboard -> {
                 replaceFragment(DashBoardFragment())
+                backButtonVisible(0)
                 fragmentTitle.text = getString(R.string.title_activity_dashboard)
-                spinner.isVisible = true
-                backButton.isVisible = false
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_self-> {
                 replaceFragment(SelfServiceFragment())
+                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_news-> {
+                //replaceFragment(SelfServiceFragment())
+                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_times-> {
+                //replaceFragment(SelfServiceFragment())
+                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_game-> {
+                //replaceFragment(SelfServiceFragment())
                 fragmentTitle.text = getString(R.string.title_activity_selfservice)
                 return@OnNavigationItemSelectedListener true
             }
@@ -83,6 +104,18 @@ class MainActivity : AppCompatActivity(){
         val fragmentTransaction = supportFragmentManager.beginTransaction()
         fragmentTransaction.replace(R.id.fragmentContainer, fragment)
         fragmentTransaction.commit()
+    }
+
+    fun backButtonVisible(active : Int){
+        if(active == 1){
+            spinner.visibility = View.INVISIBLE
+            backButton.visibility = View.VISIBLE
+        }
+
+        else if(active == 0){
+            spinner.visibility = View.VISIBLE
+            backButton.visibility = View.INVISIBLE
+        }
     }
 }
 

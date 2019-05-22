@@ -11,10 +11,7 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.posgrad.*
-import com.example.posgrad.adapters.ChartAdapter
-import com.example.posgrad.adapters.ChartSet
-import com.example.posgrad.adapters.FireStoreQuery
-import com.example.posgrad.adapters.missao_nome
+import com.example.posgrad.adapters.*
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
@@ -34,12 +31,10 @@ class DashBoardFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_dashboard, container, false)
 
-
-
         //Recycler Adapter set
         val chart_recyclerView = rootView.findViewById(R.id.chartView) as RecyclerView
         chart_recyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
-        chart_recyclerView.adapter = ChartAdapter(pontuacao_collection, activity)
+        chart_recyclerView.adapter = ChartRecyclerAdapter(pontuacao_collection, activity)
 
         return rootView
 
@@ -54,6 +49,7 @@ class DashBoardFragment : Fragment() {
         val context = activity
         val chartSet = ChartSet()
 
+        chartView.adapter?.notifyDataSetChanged()
         //Set main Chart
         timeNomeMain.text = timePontuacaoMain.nome
         chartSet.setBarChart(barChartMain, lineChartMain, timePontuacaoMain, changeChartMain, 1, context)

@@ -5,17 +5,13 @@ import com.example.posgrad.*
 import com.example.posgrad.data_class.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.squareup.picasso.Picasso
+import kotlin.text.Typography.times
 
-class FireStoreQuery(){
+class FireStoreQuery(val db : FirebaseFirestore){
 
-    fun MainQuery(){
-        val db = FirebaseFirestore.getInstance()
-
-        val missoes = db.collection("missoes")
-        val times = db.collection("times")
-        val membros = db.collection(("membros"))
-
+    fun membroQuery(){
         //Obtenho o usuário
+        val membros = this.db.collection(("membros"))
         membros
             .whereEqualTo("email", "heitorbatista.oliveira@gmail.com")
             .get()
@@ -26,9 +22,33 @@ class FireStoreQuery(){
                     }
                 }
             }
+    }
 
+    fun timeQuery(){
+        //Obtenho os times
+        val times = this.db.collection("times")
+        times
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        Log.d("SuccessTime", document.id + " => " + document.data)
+                        val time = document.toObject(Time::class.java)
 
+                        time.id = document.id
+                        time.time_ref = document.reference
+                        time_collection.add(time)
+                    }
+                }
+                else {
+                    Log.d("ErrorTime", "Error getting documents: ", task.exception)
+                }
+            }
+    }
+
+    fun missaoQuery(){
         //Obtenho as missões e as coloco no meu hashmap
+        val missoes = this.db.collection("missoes")
         missoes
             .get()
             .addOnCompleteListener { task ->
@@ -45,30 +65,12 @@ class FireStoreQuery(){
                     Log.d("ErrorMissao", "Error getting documents: ", task.exception)
                 }
             }
-
-        //Obtenho os times
-        times
-            .get()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    for (document in task.result!!) {
-                        Log.d("SuccessTime", document.id + " => " + document.data)
-                        val time = document.toObject(Time::class.java)
-
-                        time.id = document.id
-                        time.time_ref = document.reference
-                        time_collection.add(time)
-                    }
-                    atividadeQuery(db)
-                }
-                else {
-                    Log.d("ErrorTime", "Error getting documents: ", task.exception)
-                }
-            }
     }
 
-    fun atividadeQuery(db : FirebaseFirestore){
-        val atividades = db.collection("atividadesComTime")
+
+
+    fun atividadeQuery(){
+        val atividades = this.db.collection("atividadesComTime")
 
         //Pra cada time, recupero as atividades relacionadas (time_ref de cada atividade)
         for(time in time_collection){
@@ -119,5 +121,60 @@ class FireStoreQuery(){
                 pontuacao_collection.add(time_pontuacao) //Adiciono a pontuação do time a minha lista
             }
         }
+    }
+
+    fun testeQuery(){
+        //Obtenho o usuário
+        val membros = this.db.collection(("membros"))
+        membros
+            .whereEqualTo("email", "heitorbatista.oliveira@gmail.com")
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        usuario = document.toObject(Membro::class.java)
+                    }
+                }
+            }
+
+        //Obtenho as missões e as coloco no meu hashmap
+        val missoes = this.db.collection("missoes")
+        missoes
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        Log.d("SuccessMissao", document.id + " => " + document.data)
+                        val missao = document.toObject(Missao::class.java)
+
+                        missao_collection.add(missao)
+                        missaoPontuacaoHashMap.put(missao.nome, 0)  // Seto o o time no meu hash com pontuação 0
+                    }
+                }
+                else {
+                    Log.d("ErrorMissao", "Error getting documents: ", task.exception)
+                }
+            }
+
+        //Obtenho os times
+        val times = this.db.collection("times")
+        times
+            .get()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    for (document in task.result!!) {
+                        Log.d("SuccessTime", document.id + " => " + document.data)
+                        val time = document.toObject(Time::class.java)
+
+                        time.id = document.id
+                        time.time_ref = document.reference
+                        time_collection.add(time)
+                    }
+                    atividadeQuery()
+                }
+                else {
+                    Log.d("ErrorTime", "Error getting documents: ", task.exception)
+                }
+            }
     }
 }
