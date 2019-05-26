@@ -29,6 +29,7 @@ import org.jetbrains.anko.uiThread
 
 //Lists que armazenam os documentos das seguintes coleções
 val atividade_collection  = ArrayList<Atividade>()
+val atividade_collection_temporada = ArrayList<Atividade>()
 val missao_collection = ArrayList<Missao>()
 val time_collection = ArrayList<Time>()
 val membros_collection = ArrayList<Membro>()
@@ -45,6 +46,7 @@ val timePontuacaoMain = TimePontuacao()
 //Modelo do Usuário
 var usuario = Membro()
 
+//val atividade_resultado : QuerySnapshot?
 
 class MainActivity : AppCompatActivity(){
 
@@ -146,7 +148,7 @@ class MainActivity : AppCompatActivity(){
                 query.resultTime(times)
                 query.resultMissoes(missoes)
                 query.resultMembros(membros)
-                query.resultAtividades(atividades)
+                query.resultAtividades(atividades, "1ª Temporada")
 
                 Log.d("times", times.toString())
                 Log.d("missoes", missoes.toString())
@@ -165,7 +167,6 @@ class MainActivity : AppCompatActivity(){
                 Log.d("atividades", getAtividadesTask.exception.toString())
             }
         }
-
 
     }
 }

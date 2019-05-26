@@ -76,9 +76,10 @@ class FireStoreQuery(val db: FirebaseFirestore) {
         }
     }
 
-    fun resultAtividades(task: QuerySnapshot?) {
+    fun resultAtividades(task: QuerySnapshot?, temporada_atual : String) {
 
-        //var primeiro_loop = 0 //Variavel para garantir que as atividades serão adicionadas na lista apenas um vez
+        atividade_collection.clear()
+        atividade_collection_temporada.clear()
 
         //Pra cada time, recupero as atividades relacionadas (time_ref de cada atividade)
         for (time in time_collection) {
@@ -104,14 +105,16 @@ class FireStoreQuery(val db: FirebaseFirestore) {
                             atividade.missao_string = missao.nome //Armazeno a referência em string para a missão da atividade
 
                             //Verifico a temporada
-                            if (missao.temp == "1ª Temporada") {
+                            if (missao.temp == temporada_atual) {
                                 //Atualizo a pontuação
                                 val pontuacao_atual = time_pontuacao.pontuacao?.get(missao.nome)?.plus(atividade.pontuacao)
                                 time_pontuacao.pontuacao?.put(missao.nome, pontuacao_atual)
 
                                 Log.d("saber", time.id + "" + missao.nome)
-                                atividade_collection.add(atividade) //Adiciono a atividade a minha lista
+                                atividade_collection_temporada.add(atividade) //Adiciono a atividade a minha lista de atividades daquela temporada
                             }
+
+                            atividade_collection.add(atividade)
                         }
                     }
                 }

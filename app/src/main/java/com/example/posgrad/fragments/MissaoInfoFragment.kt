@@ -67,9 +67,8 @@ class MissaoInfoFragment : Fragment() {
     fun findAtividades(missaoNomeString : String?, timeNomeString : String?){
 
         //Verifico todas as atividades referentes ao time e missão em questão
-        for(atividade in atividade_collection){
+        for(atividade in atividade_collection_temporada){
             if(atividade.time_string == timeNomeString!!){
-                Log.d("pikachu", atividade.toString())
                 if(atividade.missao_string == ("Missão " + missaoNomeString!!)){
                     atividades_locais.add(atividade)
 
