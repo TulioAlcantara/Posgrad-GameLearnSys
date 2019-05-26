@@ -7,5 +7,6 @@ data class Missao(
     val nome : String = "",
     val order : Long = 0,
     var temp : String = "",
-    val temporada : DocumentReference? = null
+    val temporada : DocumentReference? = null,
+    var missao_ref_string : String = ""
 )

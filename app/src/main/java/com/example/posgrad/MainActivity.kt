@@ -13,10 +13,14 @@ import com.example.posgrad.adapters.FireStoreQuery
 import com.example.posgrad.data_class.*
 import com.example.posgrad.fragments.DashBoardFragment
 import com.example.posgrad.fragments.SelfServiceFragment
+import com.example.posgrad.fragments.TimesFragment
+import com.google.android.gms.tasks.Task
+import com.google.android.gms.tasks.Tasks
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Picasso
 import org.jetbrains.anko.UI
 import org.jetbrains.anko.activityUiThread
@@ -27,6 +31,7 @@ import org.jetbrains.anko.uiThread
 val atividade_collection  = ArrayList<Atividade>()
 val missao_collection = ArrayList<Missao>()
 val time_collection = ArrayList<Time>()
+val membros_collection = ArrayList<Membro>()
 
 //Lista da relação Time - Pontuação(Hash missão - pontuação)
 val pontuacao_collection = ArrayList<TimePontuacao>()
@@ -50,20 +55,7 @@ class MainActivity : AppCompatActivity(){
 
         //Set user avatar
         Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(userAvatar)
-
-        /*
-         //FireStore Query
-        query.timeQuery()
-        query.membroQuery()
-        query.missaoQuery()
-        query.atividadeQuery()
-        */
-
-        val db = FirebaseFirestore.getInstance()
-        val query = FireStoreQuery(db)
-        query.testeQuery()
-
-        replaceFragment(SelfServiceFragment())
+        mainQuery()
     }
 
     //Controlador da bottom navigation view
@@ -82,17 +74,17 @@ class MainActivity : AppCompatActivity(){
             }
             R.id.navigation_news-> {
                 //replaceFragment(SelfServiceFragment())
-                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                fragmentTitle.text = getString(R.string.title_activity_news)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_times-> {
-                //replaceFragment(SelfServiceFragment())
-                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                replaceFragment(TimesFragment())
+                fragmentTitle.text = getString(R.string.title_activity_times)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_game-> {
                 //replaceFragment(SelfServiceFragment())
-                fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                fragmentTitle.text = getString(R.string.title_activity_game)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -106,6 +98,7 @@ class MainActivity : AppCompatActivity(){
         fragmentTransaction.commit()
     }
 
+    //Controla a visibilidade do Widget do canto superior direito
     fun backButtonVisible(active : Int){
         if(active == 1){
             spinner.visibility = View.INVISIBLE
@@ -116,6 +109,64 @@ class MainActivity : AppCompatActivity(){
             spinner.visibility = View.VISIBLE
             backButton.visibility = View.INVISIBLE
         }
+
+        else if(active == -1){
+            spinner.visibility = View.INVISIBLE
+            backButton.visibility = View.INVISIBLE
+        }
+    }
+
+    fun mainQuery(){
+        val allTask: Task<Void>
+        val db = FirebaseFirestore.getInstance()
+        val query = FireStoreQuery(db)
+
+        val gettimesTask = query.getTimes()
+        val getmissoesTask = query.getMissoes()
+        val getmembrosTask = query.getMembros()
+        val getAtividadesTask = query.getAtividades()
+
+        // Tasks.whenAll só chama o bloco dentro do onComplete dele quando todas as tasks abaixo retornam onSuccess
+        allTask = Tasks.whenAll(gettimesTask, getmissoesTask, getmembrosTask, getAtividadesTask)
+
+        allTask.addOnCompleteListener {
+            val times: QuerySnapshot?
+            val missoes: QuerySnapshot?
+            val membros: QuerySnapshot?
+            val atividades: QuerySnapshot?
+
+            if (gettimesTask.isSuccessful && getmissoesTask.isSuccessful &&
+                getmembrosTask.isSuccessful && getAtividadesTask.isSuccessful) {
+
+                times = gettimesTask.result!!
+                missoes = getmissoesTask.result!!
+                membros = getmembrosTask.result!!
+                atividades = getAtividadesTask.result!!
+
+                query.resultTime(times)
+                query.resultMissoes(missoes)
+                query.resultMembros(membros)
+                query.resultAtividades(atividades)
+
+                Log.d("times", times.toString())
+                Log.d("missoes", missoes.toString())
+                Log.d("membros", membros.toString())
+                Log.d("atividades", atividades.toString())
+
+
+                progressBar.visibility = View.INVISIBLE
+                replaceFragment(DashBoardFragment())
+            }
+
+            else {
+                Log.d("times", gettimesTask.exception.toString())
+                Log.d("missoes", getmissoesTask.exception.toString())
+                Log.d("membros", getmembrosTask.exception.toString())
+                Log.d("atividades", getAtividadesTask.exception.toString())
+            }
+        }
+
+
     }
 }
 

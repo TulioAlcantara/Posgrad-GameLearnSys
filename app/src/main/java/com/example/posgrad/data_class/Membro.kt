@@ -7,5 +7,6 @@ data class Membro(
     val curso : String = "",
     val email : String = "",
     var idtime : DocumentReference? = null,
-    val nome : String = ""
+    val nome : String = "",
+    var time_string : String = ""
 )

@@ -1,27 +1,21 @@
-package com.example.posgrad.adapters
+package com.example.posgrad.recycler_adapters
 
-import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.example.posgrad.MainActivity
 import com.example.posgrad.data_class.Atividade
 //import com.example.posgrad.R
-import com.example.posgrad.data_class.TimePontuacao
-import com.example.posgrad.fragments.atividades_locais
 import kotlinx.android.synthetic.main.layout_atividade_info.view.*
-import kotlinx.android.synthetic.main.layout_chart.view.*
-import androidx.core.content.ContextCompat.startActivity
 import android.content.Intent
 import android.net.Uri
 
 
 class AtividadeInfoRecyclerAdapter(val atividades : ArrayList<Atividade>, val context: FragmentActivity?)  : RecyclerView.Adapter<AtividadeInfoRecyclerAdapter.ViewHolder>(){
 
-    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): AtividadeInfoRecyclerAdapter.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, p1: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(com.example.posgrad.R.layout.layout_atividade_info, parent, false)
         Log.d("pikachu", atividades.toString())
         return ViewHolder(v)

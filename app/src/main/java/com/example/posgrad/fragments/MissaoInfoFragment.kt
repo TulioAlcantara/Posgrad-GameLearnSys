@@ -1,18 +1,16 @@
 package com.example.posgrad.fragments
 
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.posgrad.*
-import com.example.posgrad.adapters.AtividadeInfoRecyclerAdapter
+import com.example.posgrad.recycler_adapters.AtividadeInfoRecyclerAdapter
 
 import com.example.posgrad.data_class.Atividade
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,8 +23,6 @@ class MissaoInfoFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_missao_info, container, false)
 
-        atividades_locais.clear() //Reseto a lista de atividades referentes a missão
-
         //Recycler Adapter set
         val atividade_recyclerview = rootView.findViewById(R.id.atividadeView) as RecyclerView
         atividade_recyclerview.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -37,11 +33,14 @@ class MissaoInfoFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
 
+        atividades_locais.clear() //Reseto a lista de atividades referentes a missão
+
         val bundle = arguments
         (activity as MainActivity).navigation.visibility = View.GONE
 
         Log.d("argumentos", bundle?.getString("time") + " " + bundle?.getString("missao")+ " " + bundle?.getString("descricao"))
 
+        //Recebo os elementos do Bundle
         val missaoNomeString = bundle?.getString("missao")
         val timeNomeString = bundle?.getString("time")
         val missaoDescricaoString = bundle?.getString("descricao")
@@ -59,8 +58,8 @@ class MissaoInfoFragment : Fragment() {
             backButtonPressed()
         }
 
+        //Encontro as atividades que popularão a tela
         findAtividades(missaoNomeString, timeNomeString)
-
 
         super.onActivityCreated(savedInstanceState)
     }
@@ -70,13 +69,14 @@ class MissaoInfoFragment : Fragment() {
         //Verifico todas as atividades referentes ao time e missão em questão
         for(atividade in atividade_collection){
             if(atividade.time_string == timeNomeString!!){
+                Log.d("pikachu", atividade.toString())
                 if(atividade.missao_string == ("Missão " + missaoNomeString!!)){
                     atividades_locais.add(atividade)
+
                 }
             }
         }
 
-        Log.d("pikachu", atividades_locais.toString())
         atividadeView.adapter?.notifyDataSetChanged()
     }
 
