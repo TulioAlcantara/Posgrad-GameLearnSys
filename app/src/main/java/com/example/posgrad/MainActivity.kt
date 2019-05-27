@@ -3,29 +3,21 @@ package com.example.posgrad
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.annotation.UiThread
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.graphics.component2
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.example.posgrad.adapters.FireStoreQuery
 import com.example.posgrad.data_class.*
 import com.example.posgrad.fragments.DashBoardFragment
 import com.example.posgrad.fragments.SelfServiceFragment
 import com.example.posgrad.fragments.TimesFragment
+import com.example.posgrad.fragments.UserInfoFragment
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
-import com.google.firebase.FirebaseApp
-import com.google.firebase.firestore.DocumentReference
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.QuerySnapshot
 import com.squareup.picasso.Picasso
-import org.jetbrains.anko.UI
-import org.jetbrains.anko.activityUiThread
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 
 //Lists que armazenam os documentos das seguintes coleções
 val atividade_collection  = ArrayList<Atividade>()
@@ -41,7 +33,7 @@ val pontuacao_collection = ArrayList<TimePontuacao>()
 val missaoPontuacaoHashMap = mutableMapOf<String?, Int?>()
 
 //Pontuação do time do usuário
-val timePontuacaoMain = TimePontuacao()
+var timePontuacaoMain = TimePontuacao()
 
 //Modelo do Usuário
 var usuario = Membro()
@@ -53,11 +45,19 @@ class MainActivity : AppCompatActivity(){
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        //Listener da toolbar
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
 
-        //Set user avatar
-        Picasso.get().load("http://i.imgur.com/DvpvklR.png").into(userAvatar)
+        //Query que recupera todos os dados do BD
         mainQuery()
+
+        //Listener do avatar do usuário
+        userAvatar.setOnClickListener {
+            replaceFragment(UserInfoFragment())
+        }
+
+
     }
 
     //Controlador da bottom navigation view
@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity(){
 
                 query.resultTime(times)
                 query.resultMissoes(missoes)
-                query.resultMembros(membros)
+                query.resultMembros(intent.getStringExtra("user_email"), membros)
                 query.resultAtividades(atividades, "1ª Temporada")
 
                 Log.d("times", times.toString())
@@ -157,6 +157,15 @@ class MainActivity : AppCompatActivity(){
 
 
                 progressBar.visibility = View.INVISIBLE
+
+                //Set user avatar
+                if(usuario.avatar.isNotEmpty()){
+                    Picasso.get().load(usuario.avatar).into(userAvatar)
+                }
+                else{
+                    userAvatar.setBackgroundResource(R.drawable.ic_misc_user_notfound)
+                }
+
                 replaceFragment(DashBoardFragment())
             }
 

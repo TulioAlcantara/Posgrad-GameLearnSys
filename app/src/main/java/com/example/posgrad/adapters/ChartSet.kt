@@ -1,21 +1,12 @@
 package com.example.posgrad.adapters
 
-import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
-import android.util.Log
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.fragment.app.FragmentTransaction
-import com.example.posgrad.MainActivity
 import com.example.posgrad.R
 import com.example.posgrad.data_class.TimePontuacao
-import com.example.posgrad.fragments.DashBoardFragment
 import com.example.posgrad.fragments.MissaoInfoFragment
 import com.example.posgrad.missao_collection
 import com.github.mikephil.charting.charts.BarChart
@@ -26,9 +17,6 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
-import kotlinx.android.synthetic.main.fragment_missao_info.*
-import kotlinx.android.synthetic.main.layout_chart.view.*
-import kotlin.coroutines.coroutineContext
 
 
 val missao_nome = ArrayList<String>()
@@ -48,7 +36,7 @@ class ChartSet(){
 
         val selector = ChartSelection(context, time_pontuacao) //Objeto Listener de cada item do chart
 
-        button.setImageResource(R.drawable.line_chart_big) //Imagem do FAB
+        button.setImageResource(R.drawable.ic_chart_line) //Imagem do FAB
 
         val barEntries = ArrayList<BarEntry>() // Array com os pontos
         var x = 0
@@ -119,7 +107,7 @@ class ChartSet(){
 
         val selector = ChartSelection(context, time_pontuacao) //Objeto Listener de cada item do chart
 
-        button.setImageResource(R.drawable.bar_chart_big) //Imagem do FAB
+        button.setImageResource(R.drawable.ic_chart_bar) //Imagem do FAB
 
         val lineEntries = ArrayList<Entry>() // Array com os pontos
         var x = 0

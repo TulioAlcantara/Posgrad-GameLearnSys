@@ -21,6 +21,10 @@
             "package_name": "com.example.gamelearnsys",
             "certificate_hash": "170a1f5f38e101ab4d320144ca727a32c650ff33"
           }
+        },
+        {
+          "client_id": "1093204404599-telg6ol44th86po6kmhmce6gjrlnp51c.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [
@@ -61,6 +65,10 @@
             "package_name": "com.example.posgrad",
             "certificate_hash": "170a1f5f38e101ab4d320144ca727a32c650ff33"
           }
+        },
+        {
+          "client_id": "1093204404599-telg6ol44th86po6kmhmce6gjrlnp51c.apps.googleusercontent.com",
+          "client_type": 3
         }
       ],
       "api_key": [

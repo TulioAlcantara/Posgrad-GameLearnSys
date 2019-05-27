@@ -41,9 +41,7 @@ class TimeInfoFragment : Fragment() {
         val bundle = arguments
         val time_local = bundle?.getString("nome_time")
         for(membro in membros_collection){
-
             if(membro.time_string == time_local){
-                Log.d("agumon", membro.toString())
                 membros_locais.add(membro)
             }
         }

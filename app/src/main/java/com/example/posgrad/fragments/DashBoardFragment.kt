@@ -17,15 +17,15 @@ import com.example.posgrad.recycler_adapters.ChartRecyclerAdapter
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_dashboard.*
 import android.os.Parcelable
-
-
+import android.widget.TextView
+import org.w3c.dom.Text
 
 
 //val chart_recyclerView : RecyclerView
 
 class DashBoardFragment : Fragment() {
 
-    val spinner_items = arrayOf("1ª Temporada", "2ª Temporada")
+    val spinner_items = arrayOf("1ª Temporada", "2ª Temporada", "3ª Temporada")
     val temporada_atual : String = ""
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -41,6 +41,9 @@ class DashBoardFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
 
+        Log.d("agumon", timePontuacaoMain.toString())
+
+
         (activity as MainActivity).fragmentTitle.text = ("Dashboard")
         (activity as MainActivity).spinner.adapter = ArrayAdapter(
             activity, // Context
@@ -48,12 +51,14 @@ class DashBoardFragment : Fragment() {
             spinner_items // Array
         )
 
+        //Spinner Adapter
         (activity as MainActivity).spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
 
             }
 
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                (view as TextView).setText(null)
                 mudarTemporada(spinner_items.get(position))
                 chartView.adapter?.notifyDataSetChanged()
             }
@@ -104,9 +109,8 @@ class DashBoardFragment : Fragment() {
             }
 
             //Verifico se eh o time do usuário
-            if (time.id == "Aquila") {
-                timePontuacaoMain.nome = time.id
-                timePontuacaoMain.pontuacao = time_hash
+            if (time.id == usuario.time_string) {
+                timePontuacaoMain = time_pontuacao
             } else {
                 pontuacao_collection.add(time_pontuacao) //Adiciono a pontuação do time a minha lista
             }

@@ -57,21 +57,29 @@ class FireStoreQuery(val db: FirebaseFirestore) {
         }
     }
 
-    fun resultMembros(task: QuerySnapshot?) {
+    fun resultMembros(userEmail: String, task: QuerySnapshot?) {
         for (document in task!!.iterator()) {
 
             Log.d("SuccessMembro", document.id + " => " + document.data)
 
             val membro = document.toObject(Membro::class.java)
-            val time_ref = membro.idtime.toString()
 
             for (time in time_collection) {
-                if (time_ref == time.time_ref_string) {
+                if (membro.idtime.toString() == time.time_ref_string) {
                     membro.time_string = time.id
                 }
             }
 
-            membros_collection.add(membro)
+            //Encontro o perfil do usuário
+            if(membro.email == userEmail){
+                usuario = membro
+            }
+            else{
+                Log.d("membros1", membro.toString())
+
+                membros_collection.add(membro)
+            }
+
 
         }
     }
@@ -106,11 +114,11 @@ class FireStoreQuery(val db: FirebaseFirestore) {
 
                             //Verifico a temporada
                             if (missao.temp == temporada_atual) {
+
                                 //Atualizo a pontuação
                                 val pontuacao_atual = time_pontuacao.pontuacao?.get(missao.nome)?.plus(atividade.pontuacao)
                                 time_pontuacao.pontuacao?.put(missao.nome, pontuacao_atual)
 
-                                Log.d("saber", time.id + "" + missao.nome)
                                 atividade_collection_temporada.add(atividade) //Adiciono a atividade a minha lista de atividades daquela temporada
                             }
 
@@ -121,9 +129,12 @@ class FireStoreQuery(val db: FirebaseFirestore) {
             }
 
             //Verifico se eh o time do usuário
-            if (time.id == "Aquila") {
-                timePontuacaoMain.nome = time.id
-                timePontuacaoMain.pontuacao = time_hash
+            if (time.id == usuario.time_string) {
+
+                //timePontuacaoMain.nome = time.id
+                //timePontuacaoMain.pontuacao = time_hash
+                timePontuacaoMain = time_pontuacao
+
             } else {
                 pontuacao_collection.add(time_pontuacao) //Adiciono a pontuação do time a minha lista
             }

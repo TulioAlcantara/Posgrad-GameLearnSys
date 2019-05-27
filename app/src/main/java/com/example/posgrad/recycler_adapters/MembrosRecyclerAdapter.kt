@@ -30,6 +30,9 @@ class MembrosRecyclerAdapter(val times : ArrayList<Time>, val context: FragmentA
         if(times.get(position).avatar.isNotEmpty()){
             Picasso.get().load(times.get(position).avatar).into(holder.avatarSquare)
         }
+        else{
+            holder.avatarSquare.setImageResource(R.drawable.ic_misc_user_notfound)
+        }
 
         holder.avatarSquare.setOnClickListener{
             val fragmentoAlvo = TimeInfoFragment()
