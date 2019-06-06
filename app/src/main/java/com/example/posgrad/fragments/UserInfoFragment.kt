@@ -58,7 +58,7 @@ class UserInfoFragment : Fragment() {
         (activity as MainActivity).userAvatar.visibility = View.VISIBLE
         val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
         fragmentTransaction?.remove(UserInfoFragment())
-        fragmentTransaction?.replace(R.id.fragmentContainer, DashBoardFragment())
+        //fragmentTransaction?.replace(R.id.fragmentContainer, DashBoardFragment())
         fragmentTransaction?.commit()
     }
 

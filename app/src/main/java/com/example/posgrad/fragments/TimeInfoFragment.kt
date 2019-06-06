@@ -65,7 +65,7 @@ class TimeInfoFragment : Fragment() {
         (activity as MainActivity).fragmentTitle?.text = "Times"
         (activity as MainActivity).navigation.visibility = View.VISIBLE
         val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
-        fragmentTransaction?.remove(TimeInfoFragment())
+        //fragmentTransaction?.remove(TimeInfoFragment())
         fragmentTransaction?.replace(R.id.fragmentContainer, TimesFragment())
         fragmentTransaction?.commit()
     }

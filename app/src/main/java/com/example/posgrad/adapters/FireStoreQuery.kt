@@ -71,20 +71,16 @@ class FireStoreQuery(val db: FirebaseFirestore) {
             }
 
             //Encontro o perfil do usuário
-            if(membro.email == userEmail){
+            if (membro.email == userEmail) {
                 usuario = membro
             }
-            else{
-                Log.d("membros1", membro.toString())
-
-                membros_collection.add(membro)
-            }
+            membros_collection.add(membro)
 
 
         }
     }
 
-    fun resultAtividades(task: QuerySnapshot?, temporada_atual : String) {
+    fun resultAtividades(task: QuerySnapshot?, temporada_atual: String) {
 
         atividade_collection.clear()
         atividade_collection_temporada.clear()
@@ -110,13 +106,15 @@ class FireStoreQuery(val db: FirebaseFirestore) {
 
                         //Busco a missão referente a atividade
                         if (missao.missao_ref_string == missao_ref) {
-                            atividade.missao_string = missao.nome //Armazeno a referência em string para a missão da atividade
+                            atividade.missao_string =
+                                missao.nome //Armazeno a referência em string para a missão da atividade
 
                             //Verifico a temporada
                             if (missao.temp == temporada_atual) {
 
                                 //Atualizo a pontuação
-                                val pontuacao_atual = time_pontuacao.pontuacao?.get(missao.nome)?.plus(atividade.pontuacao)
+                                val pontuacao_atual =
+                                    time_pontuacao.pontuacao?.get(missao.nome)?.plus(atividade.pontuacao)
                                 time_pontuacao.pontuacao?.put(missao.nome, pontuacao_atual)
 
                                 atividade_collection_temporada.add(atividade) //Adiciono a atividade a minha lista de atividades daquela temporada
