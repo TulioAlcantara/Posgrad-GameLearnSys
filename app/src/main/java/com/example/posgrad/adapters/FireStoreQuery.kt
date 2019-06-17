@@ -26,6 +26,11 @@ class FireStoreQuery(val db: FirebaseFirestore) {
         return times.get()
     }
 
+    fun getSelf(): Task<QuerySnapshot> {
+        val self = db.collection("self")
+        return self.get()
+    }
+
     // Caso preciso você cria um "getTempActivities()" que recebe temporada e dá o where e retorna os snapshots
     fun getAtividades(): Task<QuerySnapshot> {
         val atividades = db.collection("atividadesComTime")
@@ -54,6 +59,27 @@ class FireStoreQuery(val db: FirebaseFirestore) {
 
             missao_collection.add(missao)
             missaoPontuacaoHashMap.put(missao.nome, 0)  // Seto o o time no meu hash com pontuação 0
+        }
+    }
+
+    fun resultSelf(task: QuerySnapshot?){
+        for (document in task!!.iterator()){
+            Log.d("SuccessSelf", document.id + " => " + document.data)
+            //val objAprendizagem : ObjAprendizagem = document.get("arrayObjAprendizagem")
+            val self = document.toObject(Self::class.java)
+            self_collection.add(self)
+        }
+
+        //Separo os itens do self em duas listas distintas
+        for(item in self_collection){
+            if(item.formacao == "ESPGTI"){
+                self_collection_espgti.add(item)
+                Log.d("espgti", item.toString())
+            }
+            else if(item.formacao == "DSS-BI"){
+                self_collection_dss.add(item)
+                Log.d("dss", item.toString())
+            }
         }
     }
 
@@ -92,7 +118,7 @@ class FireStoreQuery(val db: FirebaseFirestore) {
 
             for (document in task!!.iterator()) {
 
-                Log.d("SuccessAtividade", document.id + " => " + document.data)
+                //Log.d("SuccessAtividade", document.id + " => " + document.data)
 
                 val atividade = document.toObject(Atividade::class.java)
 

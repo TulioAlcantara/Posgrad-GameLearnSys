@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+                                   android:layout_width="match_parent"
+                                   android:layout_height="wrap_content" android:layout_marginLeft="10sp"
+                                   android:layout_marginRight="10sp" android:layout_marginTop="10sp">
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        <TextView
+                android:text="Sample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:id="@+id/self_titulo" android:textStyle="bold"
+                android:textSize="30sp" android:layout_marginLeft="3dp"/>
+        <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" android:layout_marginLeft="5sp" android:layout_marginRight="5sp">
+            <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                <TextView
+                        android:text="Background"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/self_item1" android:textSize="20sp"
+                        android:layout_marginTop="5dp" android:layout_marginLeft="3dp"/>
+                <TextView
+                        android:text="Toolkit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/self_item2" android:textSize="20sp"
+                        android:layout_marginTop="5dp" android:layout_marginLeft="3dp"/>
+                <TextView
+                        android:text="DIY"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" android:id="@+id/self_item3" android:textSize="20sp"
+                        android:layout_marginTop="5dp" android:layout_marginBottom="5dp"
+                        android:layout_marginLeft="3dp"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

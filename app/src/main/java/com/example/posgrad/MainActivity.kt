@@ -8,10 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.posgrad.adapters.FireStoreQuery
 import com.example.posgrad.data_class.*
-import com.example.posgrad.fragments.DashBoardFragment
-import com.example.posgrad.fragments.SelfServiceFragment
-import com.example.posgrad.fragments.TimesFragment
-import com.example.posgrad.fragments.UserInfoFragment
+import com.example.posgrad.fragments.*
 import com.google.android.gms.tasks.Task
 import com.google.android.gms.tasks.Tasks
 import kotlinx.android.synthetic.main.activity_main.*
@@ -25,6 +22,9 @@ val atividade_collection_temporada = ArrayList<Atividade>()
 val missao_collection = ArrayList<Missao>()
 val time_collection = ArrayList<Time>()
 val membros_collection = ArrayList<Membro>()
+val self_collection = ArrayList<Self>()
+val self_collection_dss = ArrayList<Self>()
+val self_collection_espgti = ArrayList<Self>()
 
 //Lista da relação Time - Pontuação(Hash missão - pontuação)
 val pontuacao_collection = ArrayList<TimePontuacao>()
@@ -66,29 +66,33 @@ class MainActivity : AppCompatActivity(){
             R.id.navigation_dashboard -> {
                 replaceFragment(DashBoardFragment())
                 backButtonVisible(0)
+                userAvatar.visibility = View.VISIBLE
+                navigation.visibility = View.VISIBLE
                 fragmentTitle.text = getString(R.string.title_activity_dashboard)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_self-> {
                 replaceFragment(SelfServiceFragment())
                 fragmentTitle.text = getString(R.string.title_activity_selfservice)
+                navigation.visibility = View.VISIBLE
                 return@OnNavigationItemSelectedListener true
-            }
+            }/*
             R.id.navigation_news-> {
                 //replaceFragment(SelfServiceFragment())
                 fragmentTitle.text = getString(R.string.title_activity_news)
                 return@OnNavigationItemSelectedListener true
-            }
+            }*/
             R.id.navigation_times-> {
                 replaceFragment(TimesFragment())
                 fragmentTitle.text = getString(R.string.title_activity_times)
+                navigation.visibility = View.VISIBLE
                 return@OnNavigationItemSelectedListener true
-            }
+            }/*
             R.id.navigation_game-> {
                 //replaceFragment(SelfServiceFragment())
                 fragmentTitle.text = getString(R.string.title_activity_game)
                 return@OnNavigationItemSelectedListener true
-            }
+            }*/
         }
         false
     }
@@ -123,35 +127,41 @@ class MainActivity : AppCompatActivity(){
         val db = FirebaseFirestore.getInstance()
         val query = FireStoreQuery(db)
 
-        val gettimesTask = query.getTimes()
-        val getmissoesTask = query.getMissoes()
-        val getmembrosTask = query.getMembros()
+        val getTimesTask = query.getTimes()
+        val getMissoesTask = query.getMissoes()
+        val getSelfTask = query.getSelf()
+        val getMembrosTask = query.getMembros()
         val getAtividadesTask = query.getAtividades()
 
         // Tasks.whenAll só chama o bloco dentro do onComplete dele quando todas as tasks abaixo retornam onSuccess
-        allTask = Tasks.whenAll(gettimesTask, getmissoesTask, getmembrosTask, getAtividadesTask)
+        allTask = Tasks.whenAll(getTimesTask, getMissoesTask, getMembrosTask, getAtividadesTask)
 
         allTask.addOnCompleteListener {
             val times: QuerySnapshot?
             val missoes: QuerySnapshot?
+            val self : QuerySnapshot?
             val membros: QuerySnapshot?
             val atividades: QuerySnapshot?
 
-            if (gettimesTask.isSuccessful && getmissoesTask.isSuccessful &&
-                getmembrosTask.isSuccessful && getAtividadesTask.isSuccessful) {
+            if (getTimesTask.isSuccessful && getMissoesTask.isSuccessful &&
+                getMembrosTask.isSuccessful && getAtividadesTask.isSuccessful && getSelfTask.isSuccessful) {
 
-                times = gettimesTask.result!!
-                missoes = getmissoesTask.result!!
-                membros = getmembrosTask.result!!
+                times = getTimesTask.result!!
+                missoes = getMissoesTask.result!!
+                self = getSelfTask.result!!
+                membros = getMembrosTask.result!!
                 atividades = getAtividadesTask.result!!
 
                 query.resultTime(times)
                 query.resultMissoes(missoes)
+                query.resultSelf(self)
                 query.resultMembros(intent.getStringExtra("user_email"), membros)
                 query.resultAtividades(atividades, "1ª Temporada")
 
+
                 Log.d("times", times.toString())
                 Log.d("missoes", missoes.toString())
+                Log.d("self", self.toString())
                 Log.d("membros", membros.toString())
                 Log.d("atividades", atividades.toString())
 
@@ -163,20 +173,25 @@ class MainActivity : AppCompatActivity(){
                     Picasso.get().load(usuario.avatar).into(userAvatar)
                 }
                 else{
-                    userAvatar.setBackgroundResource(R.drawable.ic_misc_user_notfound)
+                    //userAvatar.setBackgroundResource(R.drawable.ic_misc_user_notfound)
                 }
 
                 replaceFragment(DashBoardFragment())
             }
 
             else {
-                Log.d("times", gettimesTask.exception.toString())
-                Log.d("missoes", getmissoesTask.exception.toString())
-                Log.d("membros", getmembrosTask.exception.toString())
+                Log.d("times", getTimesTask.exception.toString())
+                Log.d("missoes", getMissoesTask.exception.toString())
+                Log.d("self", getSelfTask.exception.toString())
+                Log.d("membros", getMembrosTask.exception.toString())
                 Log.d("atividades", getAtividadesTask.exception.toString())
             }
         }
 
+    }
+
+    override fun onBackPressed() {
+        finish()
     }
 }
 

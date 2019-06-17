@@ -12,6 +12,7 @@ import com.example.posgrad.MainActivity
 import com.example.posgrad.R
 import com.example.posgrad.recycler_adapters.MembrosRecyclerAdapter
 import com.example.posgrad.time_collection
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_times.*
 
 
@@ -32,6 +33,9 @@ class TimesFragment : Fragment() {
 
         //Widget superior direito invisível
         (activity as MainActivity).backButtonVisible(-1)
+
+        //Escondo o botão de perfil
+        (activity as MainActivity).userAvatar.visibility = View.INVISIBLE
 
         squareView.adapter?.notifyDataSetChanged()
         super.onActivityCreated(savedInstanceState)

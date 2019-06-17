@@ -12,18 +12,19 @@
         <ImageView
                 android:layout_width="145dp"
                 android:layout_height="118dp" tools:srcCompat="@tools:sample/avatars" android:id="@+id/square_avatar"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="4dp"
                 app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="8dp" app:layout_constraintEnd_toEndOf="parent"
-                android:layout_marginEnd="8dp" app:layout_constraintHorizontal_bias="0.307"/>
+                android:layout_marginEnd="8dp"/>
         <TextView
                 android:text="sample"
                 android:layout_width="144dp"
-                android:layout_height="27dp" android:id="@+id/square_nome"
+                android:layout_height="30dp" android:id="@+id/square_nome"
                 app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
                 android:textStyle="bold"
                 android:textSize="18sp" android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/square_avatar" android:layout_marginStart="8dp"
-                app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"/>
+                app:layout_constraintStart_toStartOf="parent" android:textAlignment="center"
+                app:autoSizeTextType="uniform"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

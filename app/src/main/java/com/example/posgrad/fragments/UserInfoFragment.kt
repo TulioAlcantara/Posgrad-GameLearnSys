@@ -35,7 +35,7 @@ class UserInfoFragment : Fragment() {
             Picasso.get().load(usuario.avatar).into(userAvatar)
         }
         else{
-            userAvatar.setBackgroundResource(R.drawable.ic_misc_user_notfound)
+            //userAvatar.setBackgroundResource(R.drawable.ic_misc_user_notfound)
         }
 
         //Seto os elementos da UI
@@ -58,7 +58,7 @@ class UserInfoFragment : Fragment() {
         (activity as MainActivity).userAvatar.visibility = View.VISIBLE
         val fragmentTransaction = activity?.supportFragmentManager?.beginTransaction()
         fragmentTransaction?.remove(UserInfoFragment())
-        //fragmentTransaction?.replace(R.id.fragmentContainer, DashBoardFragment())
+        fragmentTransaction?.replace(R.id.fragmentContainer, DashBoardFragment())
         fragmentTransaction?.commit()
     }
 
